@@ -1,0 +1,49 @@
+
+ spring:
+    #thymeleaf
+    thymeleaf:
+       cache: false # 关闭页面缓存
+       encoding: UTF-8 # 模板编码
+       prefix: classpath:/templates/  # 页面映射路径
+       suffix: .html # 试图后的后缀
+       mode: HTML5 # 模板模式
+    #druid
+    datasource:
+       url: jdbc:mysql://localhost:3306/miaosha?useUnicode=true&characterEncodeing=utf-8&serverTimezone=Asia/Shanghai
+       username: root
+       password: 123456
+       driver-class-name: com.mysql.jdbc.Driver
+       type: com.alibaba.druid.pool.DruidDataSource
+       filters: stat
+       maxActive: 2
+       initialSize: 1
+       maxWait: 60000
+       minIdle: 1
+       timeBetweenEvictionRunsMillis: 60000
+       minEvictableIdleTimeMillis: 300000
+       validationQuery: select 'x'
+       testWhileIdle: true
+       testOnBorrow: false
+       testOnReturn: false
+       poolPreparedStatements: true
+       maxOpenPreparedStatements: 20
+#mybatis
+ mybatis: 
+    type-aliases-pakeage: com.imooc.miaosha.pojo
+    configuration:
+       map-underscore-to-camel-case: true   #开启驼峰命名
+       default-fetch-size: 100   #
+       default-statement-timeout: 3000   #
+    mapperLocations: classpath:com/imooc/miaosha/dao/*xml
+#redis
+ redis:
+    host: 192.168.10.100
+    port: 6379
+    timeout: 10
+    password: root
+    pool:
+       maxTotal: 1000
+       maxIdle: 100
+       maxWait: 3
+
+ 
