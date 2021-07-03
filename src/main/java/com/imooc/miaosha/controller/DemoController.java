@@ -43,7 +43,7 @@ public class DemoController {
 	}
 	@RequestMapping("/get/{id}")
 	@ResponseBody
-	public Result<User> dbGet(@PathVariable int id){
+	public Result<User> dbGet(@PathVariable Long id){
 		return Result.success(userService.getUserById(id));
 	}
 	@RequestMapping("/tx")
@@ -55,7 +55,7 @@ public class DemoController {
 	@RequestMapping("/redis")
 	@ResponseBody
 	public Result<User> redisGet(){
-		User user=redisService.get(UserKey.getById,""+2, User.class);
+		User user=redisService.get(UserKey.token,""+2, User.class);
 		return Result.success(user);
 	}
 	@RequestMapping("/redis/set")
@@ -64,7 +64,7 @@ public class DemoController {
 		User user=new User();
 		user.setId(2);
 		user.setName("李四");
-		redisService.set(UserKey.getById,""+2, user);
+		redisService.set(UserKey.token,""+2, user);
 		return Result.success(true);
 	}
 }

@@ -11,7 +11,7 @@ import com.imooc.miaosha.pojo.User;
 public interface UserDao {
 	//根据id查询user
 	@Select("select * from user where id=#{id}")
-	public User getUserById(@Param("id") int id);
+	public User getUserById(@Param("id")long id);
 	//插入user信息
 	@Insert("insert into user (id,name) values(#{id},#{name})")
 	public int insertUser(User user);

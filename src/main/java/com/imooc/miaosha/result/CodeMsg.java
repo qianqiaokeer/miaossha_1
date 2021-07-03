@@ -6,6 +6,7 @@ public class CodeMsg {
 	private String msg;
 	public static CodeMsg SUCCESS=new CodeMsg(200, "成功");
 	public static CodeMsg SERVER_ERROR=new CodeMsg(500100,"服务端异常");
+	public static CodeMsg BIND_ERROR=new CodeMsg(500101, "参数校验异常:%s");
 	public static CodeMsg GG_ERROR=new CodeMsg(500200, "普通异常");
 	public static CodeMsg PASSWORD_EMPTY=new CodeMsg(500211, "登录密码不能为空");
 	public static CodeMsg MOBILE_EMPTY=new CodeMsg(500212, "手机号不能为空");
@@ -29,6 +30,10 @@ public class CodeMsg {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
+	public CodeMsg fillArgs(Object args) {
+		int code=this.code;
+		String massage=String.format(this.msg, args);
+		return new CodeMsg(code,massage);
+	}
 
 }

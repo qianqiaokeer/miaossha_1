@@ -9,10 +9,10 @@
        mode: HTML5 # 模板模式
     #druid
     datasource:
-       url: jdbc:mysql://localhost:3306/miaosha?useUnicode=true&characterEncodeing=utf-8&serverTimezone=Asia/Shanghai
+       url: jdbc:mysql://localhost:3306/miaosha?useUnicode=true&characterEncodeing=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
        username: root
        password: 123456
-       driver-class-name: com.mysql.jdbc.Driver
+       driver-class-name: com.mysql.cj.jdbc.Driver
        type: com.alibaba.druid.pool.DruidDataSource
        filters: stat
        maxActive: 2
@@ -37,7 +37,7 @@
     mapperLocations: classpath:com/imooc/miaosha/dao/*xml
 #redis
  redis:
-    host: 192.168.10.100
+    host: 192.168.10.101
     port: 6379
     timeout: 10
     password: root

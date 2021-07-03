@@ -1,20 +1,21 @@
 package com.imooc.miaosha.pojo;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class User {
-	private int id;
+	private long id;
 	private String name;
 	private String password;
 	private String salt;
 	private String head;
-	private Date registerDate;
-	private Date lastLoginDate;
+	private LocalDateTime registerDate;
+	private LocalDateTime lastLoginDate;
 	private Integer loginCount;
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -41,16 +42,16 @@ public class User {
 	public void setHead(String head) {
 		this.head = head;
 	}
-	public Date getRegisterDate() {
+	public LocalDateTime getRegisterDate() {
 		return registerDate;
 	}
-	public void setRegisterDate(Date registerDate) {
+	public void setRegisterDate(LocalDateTime registerDate) {
 		this.registerDate = registerDate;
 	}
-	public Date getLastLoginDate() {
+	public LocalDateTime getLastLoginDate() {
 		return lastLoginDate;
 	}
-	public void setLastLoginDate(Date lastLoginDate) {
+	public void setLastLoginDate(LocalDateTime lastLoginDate) {
 		this.lastLoginDate = lastLoginDate;
 	}
 	public Integer getLoginCount() {
