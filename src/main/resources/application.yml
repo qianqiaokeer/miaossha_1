@@ -37,7 +37,7 @@
     mapperLocations: classpath:com/imooc/miaosha/dao/*xml
 #redis
  redis:
-    host: 192.168.10.101
+    host: 192.168.31.101
     port: 6379
     timeout: 10
     password: root
