@@ -29,6 +29,18 @@ public class MiaosshaController2 {
 	OrderService orderService;
 	@Autowired
 	MiaoshaService miaoshaService;
+	
+	
+	/**
+	 * 
+	 * @param model
+	 * @param user
+	 * @param goodsId
+	 * @return
+	 * jmeter压测
+	 * 5000个线程，跑10次、
+	 * 吞吐量QPS:1717.2
+	 */
 	@RequestMapping("/do_miaosha")
 	public String toList(Model model,User user,
 			@RequestParam("goodsId") long goodsId) {

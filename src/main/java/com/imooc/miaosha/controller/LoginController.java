@@ -25,7 +25,7 @@ public class LoginController {
 	}
 	@RequestMapping("/do_login")
 	@ResponseBody
-	public Result<Boolean> doLogin(HttpServletResponse response,@Valid Login login) {
+	public Result<String> doLogin(HttpServletResponse response,@Valid Login login) {
 		log.info(login.toString());
 /*		String mobile = login.getMobile();
 		String password = login.getPassword();
@@ -44,7 +44,7 @@ public class LoginController {
  * 
  */
 		//登录
-		userService.login(response,login);
-		return Result.success(true);
+		String token = userService.login(response,login);
+		return Result.success(token);
 	}
 }

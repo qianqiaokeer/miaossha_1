@@ -21,6 +21,15 @@ public class GoodsController {
 	UserService userService;
 	@Autowired
 	GoodsService goodsService;
+	/**
+	 * 
+	 * @param model
+	 * @param user
+	 * @return
+	 * jmeter压测
+	 * 5000个线程，跑10次、
+	 * 吞吐量QPS:4529
+	 */
 	@RequestMapping("/to_list")
 	public String toList(Model model,User user
 			//@CookieValue(value=UserService.COOKIE_NAME_TOKEN,required=false) String cookieToken,

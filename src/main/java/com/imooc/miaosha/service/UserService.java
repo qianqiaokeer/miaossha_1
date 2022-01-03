@@ -59,7 +59,7 @@ public class UserService {
 		userDao.insertUser(u2);
 		return true;
 	}
-	public boolean login(HttpServletResponse response,Login login) {
+	public String login(HttpServletResponse response,Login login) {
 		if(login==null) {
 			throw new GlobleException(CodeMsg.SERVER_ERROR);
 			//return CodeMsg.SERVER_ERROR;
@@ -85,7 +85,7 @@ public class UserService {
 		//生成cookie
 		String token = UUIDUtil.uuid();
 		addCookie(response,token,user);
-		return true;
+		return token;
 	}
 	//生成cookie
 	private void addCookie(HttpServletResponse response,String token,User user) {
