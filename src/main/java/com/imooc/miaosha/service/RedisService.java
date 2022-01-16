@@ -32,6 +32,14 @@ public class RedisService {
 		}
 		
 	}
+	/**
+	 * 
+	 * @param <T>
+	 * @param keyPrefix	主名
+	 * @param key	辅助名字
+	 * @param value	要存储的内容
+	 * @return
+	 */
 	public <T> boolean set(KeyPrefix keyPrefix,String key,T value) {
 		Jedis jedis=null;
 		try {

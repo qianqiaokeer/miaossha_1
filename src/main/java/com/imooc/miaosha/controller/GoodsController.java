@@ -45,7 +45,7 @@ public class GoodsController {
 	 * 5000个线程，跑10次、
 	 * 吞吐量QPS:4529
 	 */
-	@RequestMapping(value = "/to_list", produces = "text/html")
+	@RequestMapping(value = "/to_list", produces = "text/html")	//produces以text/html的格式返回数据
 	@ResponseBody
 	public String toList(HttpServletRequest request,HttpServletResponse response, Model model,User user) {
 		//取缓存
@@ -71,9 +71,16 @@ public class GoodsController {
 		}
 		return html;
 	}
-	@RequestMapping("/to_detail/{goodsId}")
-	public String detail(Model model,User user,
+	@RequestMapping(value = "/to_detail/{goodsId}",produces = "text/html")
+	@ResponseBody
+	public String detail(HttpServletRequest request,HttpServletResponse response, Model model,User user,
 			@PathVariable("goodsId")long goodsId) {
+		//先取缓存
+		String html = redisService.get(GoodsKey.getGoodsDetail, ""+goodsId, String.class);
+		//判断缓存html是否为空，不为空则返回html
+		if(!StringUtils.isEmpty(html)) {
+			return html;
+		}
 		model.addAttribute("user", user);
 		GoodsVo goods=goodsService.getGoodsVoByGoodsId(goodsId);
 		model.addAttribute("goods",goods);
@@ -95,6 +102,13 @@ public class GoodsController {
 		}
 		model.addAttribute("miaoshaStatus",miaoshaStatus);
 		model.addAttribute("remainSeconds",remainSeconds);
-		return "goods_detail";
+		//redis中没有缓存页面则手动渲染
+		WebContext ctx = new WebContext(request, response, request.getServletContext(),request.getLocale(),model.asMap());
+		html = thymeleafViewResolver.getTemplateEngine().process("goods_detail", ctx);
+		//将html存入redis中
+		if (!StringUtils.isEmpty(html)) {
+			redisService.set(GoodsKey.getGoodsDetail, "_"+goodsId, html);
+		}
+		return html;
 	}
 }
