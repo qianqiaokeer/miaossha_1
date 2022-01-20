@@ -98,6 +98,31 @@ public class RedisService {
 		}
 		
 	}
+	/**
+	 * 
+	 * @param keyPrefix
+	 * @param key
+	 * @return
+	 */
+	public boolean delete(KeyPrefix keyPrefix,String key) {
+		Jedis jedis=null;
+		try {
+			jedis=jedisPool.getResource();
+			//生成真正的redis库中key，主+辅
+			String realKey=keyPrefix.getPrefix()+key;
+			Long ret = jedis.del(realKey);
+			return ret>0;
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+		finally {
+			//回收jedis
+			returnToPool(jedis);
+		}
+		
+	}
 	public <T> Long decr(KeyPrefix keyPrefix,String key) {
 		Jedis jedis=null;
 		try {

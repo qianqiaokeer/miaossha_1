@@ -16,6 +16,7 @@ import com.imooc.miaosha.pojo.Login;
 import com.imooc.miaosha.pojo.User;
 import com.imooc.miaosha.redis.UserKey;
 import com.imooc.miaosha.result.CodeMsg;
+import com.imooc.miaosha.result.Result;
 import com.imooc.miaosha.util.MD5Util;
 import com.imooc.miaosha.util.UUIDUtil;
 
@@ -33,7 +34,55 @@ public class UserService {
 	RedisService redisService;
 	//根据id得到user
 	public User getUserById(long id) {
-		return userDao.getUserById(id);
+		/*
+		 * 添加redis缓存对象功能
+		 */
+		//先从redis中取缓存
+		/*
+		 * redisService.get()方法中的三个参数
+		 * 1、redis库中的key主名
+		 * 2、key的辅助名
+		 * 3、redis库中的value值以User格式返回
+		 */
+		User user = redisService.get(UserKey.getById, ""+id, User.class);
+		//判断user是否为空，不为空则返回user
+		if (user != null) {
+			return user;
+		}
+		//redis库中没有缓存，则到数据库中取
+		user = userDao.getUserById(id);
+		//将在数据库中查找的user缓存到redis库中，先判断user是否为空，不为空则放入redis库中
+		if (user != null) {
+			/*
+			 * redisService.set()中的三个参数
+			 * 1、redis库中的key主名
+			 * 2、key的辅助名
+			 * 3、存入redis库的值，这里存入user对象
+			 */
+			redisService.set(UserKey.getById, ""+id, user);
+		}
+		return user;
+	}
+	//用户修改密码
+	public boolean updatePassword(String token,long id,String formPassword) {
+		//获取user
+		User user = getUserById(id);
+		if(user==null) {
+			//没找到对应的用户,抛出异常，用户不存在
+			throw new GlobleException(CodeMsg.MOBILE_NOT_EXIST);
+		}
+		//更新数据库
+		User updataUser=new User();
+		updataUser.setId(id);
+		updataUser.setPassword(MD5Util.formPassToDBPass(formPassword, user.getSalt()));
+		userDao.update(updataUser);
+		//处理redis缓存
+		//删除user对象缓存
+		redisService.delete(UserKey.getById,""+id);
+		//跟新token
+		user.setPassword(updataUser.getPassword());
+		redisService.set(UserKey.token, token, user);
+		return true;
 	}
 	public User getByToken(HttpServletResponse response,String token) {
 		if(StringUtils.isEmpty(token)) {
