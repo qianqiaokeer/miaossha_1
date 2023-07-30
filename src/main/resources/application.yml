@@ -9,16 +9,16 @@
        mode: HTML5 # 模板模式
     #druid
     datasource:
-       url: jdbc:mysql://localhost:3306/miaosha?useUnicode=true&characterEncodeing=utf-8&serverTimezone=Asia/Shanghai
+       url: jdbc:mysql://192.168.31.101:3306/miaosha?useUnicode=true&characterEncodeing=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&zeroDateTimeBehavior=convertToNull
        username: root
        password: 123456
-       driver-class-name: com.mysql.jdbc.Driver
+       driver-class-name: com.mysql.cj.jdbc.Driver
        type: com.alibaba.druid.pool.DruidDataSource
        filters: stat
-       maxActive: 2
-       initialSize: 1
+       maxActive: 1000
+       initialSize: 100
        maxWait: 60000
-       minIdle: 1
+       minIdle: 500
        timeBetweenEvictionRunsMillis: 60000
        minEvictableIdleTimeMillis: 300000
        validationQuery: select 'x'
@@ -37,13 +37,13 @@
     mapperLocations: classpath:com/imooc/miaosha/dao/*xml
 #redis
  redis:
-    host: 192.168.10.100
+    host: 192.168.31.101
     port: 6379
     timeout: 10
-    password: root
+    password: 123456
     pool:
        maxTotal: 1000
-       maxIdle: 100
-       maxWait: 3
+       maxIdle: 500
+       maxWait: 500
 
  

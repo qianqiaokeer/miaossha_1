@@ -32,6 +32,14 @@ public class RedisService {
 		}
 		
 	}
+	/**
+	 * 
+	 * @param <T>
+	 * @param keyPrefix	主名
+	 * @param key	辅助名字
+	 * @param value	要存储的内容
+	 * @return
+	 */
 	public <T> boolean set(KeyPrefix keyPrefix,String key,T value) {
 		Jedis jedis=null;
 		try {
@@ -86,6 +94,31 @@ public class RedisService {
 			return false;
 		}
 		finally {
+			returnToPool(jedis);
+		}
+		
+	}
+	/**
+	 * 
+	 * @param keyPrefix
+	 * @param key
+	 * @return
+	 */
+	public boolean delete(KeyPrefix keyPrefix,String key) {
+		Jedis jedis=null;
+		try {
+			jedis=jedisPool.getResource();
+			//生成真正的redis库中key，主+辅
+			String realKey=keyPrefix.getPrefix()+key;
+			Long ret = jedis.del(realKey);
+			return ret>0;
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+		finally {
+			//回收jedis
 			returnToPool(jedis);
 		}
 		

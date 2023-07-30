@@ -42,11 +42,12 @@
     <dependency>
     	<groupId>mysql</groupId>
     	<artifactId>mysql-connector-java</artifactId>
+    	<version>8.0.23</version>
     </dependency>
     <dependency>
     	<groupId>com.alibaba</groupId>
     	<artifactId>druid</artifactId>
-    	<version>1.1.8</version>
+    	<version>1.1.20</version>
     </dependency>
     <dependency>
     	<groupId>redis.clients</groupId>
@@ -70,8 +71,20 @@
     	<groupId>org.springframework.boot</groupId>
     	<artifactId>spring-boot-starter-validation</artifactId>
     </dependency>
+    <!--  添加打war包的依赖-->
+    <dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-tomcat</artifactId>
+    	<scope>provided</scope><!--  在编译时打war包-->
+    </dependency>
   </dependencies>
   <build>
-   
+   	<finalName>${project.artifactId}</finalName><!--  打出的war包的命名-->
+   	<plugins>
+   		<plugin>
+   			<groupId>org.springframework.boot</groupId>
+   			<artifactId>spring-boot-maven-plugin</artifactId>
+   		</plugin>
+   	</plugins>
    </build>
 </project>
