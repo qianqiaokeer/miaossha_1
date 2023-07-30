@@ -19,9 +19,11 @@ import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import com.alibaba.druid.util.StringUtils;
 import com.imooc.miaosha.pojo.User;
 import com.imooc.miaosha.redis.GoodsKey;
+import com.imooc.miaosha.result.Result;
 import com.imooc.miaosha.service.GoodsService;
 import com.imooc.miaosha.service.RedisService;
 import com.imooc.miaosha.service.UserService;
+import com.imooc.miaosha.vo.GoodsDetailVo;
 import com.imooc.miaosha.vo.GoodsVo;
 @Controller
 @RequestMapping("/goods")
@@ -44,6 +46,9 @@ public class GoodsController {
 	 * jmeter压测
 	 * 5000个线程，跑10次、
 	 * 吞吐量QPS:4529
+	 * 使用redis缓存页面后jmeter压测
+	 * 5000个线程，跑10次、
+	 * 吞吐量QPS:7799.1	
 	 */
 	@RequestMapping(value = "/to_list", produces = "text/html")	//produces以text/html的格式返回数据
 	@ResponseBody
@@ -71,7 +76,9 @@ public class GoodsController {
 		}
 		return html;
 	}
-	@RequestMapping(value = "/to_detail/{goodsId}",produces = "text/html")
+	
+	
+	@RequestMapping(value = "/to_detail_01/{goodsId}",produces = "text/html")
 	@ResponseBody
 	public String detail(HttpServletRequest request,HttpServletResponse response, Model model,User user,
 			@PathVariable("goodsId")long goodsId) {
@@ -110,5 +117,42 @@ public class GoodsController {
 			redisService.set(GoodsKey.getGoodsDetail, "_"+goodsId, html);
 		}
 		return html;
+	}
+	
+	/**
+	 * 页面静态化
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param user
+	 * @param goodsId
+	 * @return
+	 */
+	@RequestMapping(value = "/to_detail/{goodsId}",produces = "text/html")
+	@ResponseBody
+	public Result<GoodsDetailVo> static_detail(HttpServletRequest request,HttpServletResponse response, Model model,User user,@PathVariable("goodsId")long goodsId) {
+		GoodsVo goods=goodsService.getGoodsVoByGoodsId(goodsId);
+		//秒杀开始时间与结束时间
+		long startAt = goods.getStartDate().getTime();
+		long endAt = goods.getEndDate().getTime();
+		long now = System.currentTimeMillis();
+		int miaoshaStatus=0;
+		int remainSeconds=0;
+		if(now < startAt) {//秒杀未开始，倒计时
+			miaoshaStatus=0;
+			remainSeconds=(int)(startAt-now)/1000;
+		}else if(now > endAt){//秒杀已结束
+			miaoshaStatus=2;
+			remainSeconds=-1;
+		}else {//秒杀进行中
+			miaoshaStatus=1;
+			remainSeconds=0;
+		}
+		GoodsDetailVo goodsDetailVo = new GoodsDetailVo();
+		goodsDetailVo.setGoods(goods);
+		goodsDetailVo.setUser(user);
+		goodsDetailVo.setMiaoshaStatus(miaoshaStatus);
+		goodsDetailVo.setRemainSeconds(remainSeconds);
+		return Result.success(goodsDetailVo);
 	}
 }

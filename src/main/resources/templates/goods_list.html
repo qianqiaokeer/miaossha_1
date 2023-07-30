@@ -42,7 +42,10 @@
 				<td th:text="${goods.goodsPrice}"></td>
 				<td th:text="${goods.miaoshaPrice}"></td>
 				<td th:text="${goods.stockCount}"></td>
-				<td><a th:href="'/goods/to_detail/'+${goods.id}">详情</a></td>
+				<td>
+					<!--  页面静态化-->
+					<a th:href="'/html/goods_detail.html/'+${goods.id}">详情</a>
+				</td>
 			</tr>
 		</table>
 	</div>
