@@ -1,5 +1,17 @@
-
  spring:
+    #mvc:
+      #static-path-pattern: classpath:/**
+    resources:
+      add-mappings: true 
+      cache: 
+        period: 3600
+      #chain:
+        #html-application-cache: true
+        #gzipped: true
+        #enabled: true
+        #cache: true
+        #period: 3600
+      static-locations: classpath:/static/,classpath:/templates/
     #thymeleaf
     thymeleaf:
        cache: false # 关闭页面缓存
@@ -44,6 +56,7 @@
     pool:
        maxTotal: 1000
        maxIdle: 500
-       maxWait: 500
+       maxWait: 5000
+
 
  

@@ -44,7 +44,7 @@
 				<td th:text="${goods.stockCount}"></td>
 				<td>
 					<!--  页面静态化-->
-					<a th:href="'/html/goods_detail.html/'+${goods.id}">详情</a>
+					<a th:href="'/html/goods_detail.htm/?goodsId='+${goods.id}">详情</a>
 				</td>
 			</tr>
 		</table>

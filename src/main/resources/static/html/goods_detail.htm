@@ -44,10 +44,14 @@
 				<td id="miaoshaTip">
 				<input type="hidden" id="remainSeconds"/> 
 				<td>
+					<!--  
 					<form id="miaoshaForm" method="post" action="/miaosha/do_miaosha">
 						<button class="btn btn-primary btn-block" type="submit" id="buyButton">立即秒杀</button>
 						<input type="hidden" id="goodsId" name="goodsId"/>
 					</form>
+					-->
+					<button class="btn btn-primary btn-block" type="button" id="buyButton" onclick="doMiaosha()">立即秒杀</button>
+					<input type="hidden" id="goodsId" name="goodsId"/>
 				</td>
 			</tr>
 			<tr>
@@ -66,16 +70,62 @@
 	</div>
 </body>
 <script>
+	function doMiaosha(){
+		$.ajax({
+			url:"/miaosha/do_miaosha",
+			type:"POST",
+			
+		});
+	}
+
+	function render(detail){
+		var miaoshaStatus = detail.miaoshaStatus;
+		var remainSeconds = detail.remainSeconds;
+		var goods = detail.goods;
+		var user = detail.user;
+		if(user){
+			$("#userTip").hide();
+		}
+		$("#goodsName").text(goods.goodsName);
+		$("#goodsImg").attr("src",goods.goodsImg);
+		$("#startTime").text(new Date(goods.startDate).format("yyyy-MM-dd hh:mm:ss"));
+		$("#remainSeconds").val(remainSeconds);
+		$("#goodsId").val(goods.id);
+		$("#goodsPrice").text(goods.goodsPrice);
+		$("#miaoshaPrice").text(goods.miaoshaPrice);
+		$("#stockCount").text(goods.stockCount);
+		countDown();
+	}
 	$(function() {
 		//请求访问，拿到后端商品详情数据
-		
+		getDetail();
 	});
+	
+	function getDetail(){
+		var goodsId = g_getQueryString("goodsId");
+		$.ajax({
+			url:"/goods/detail/" + goodsId,
+			type:"GET",
+			success:function(data){
+				if(data.code == 0){
+					render(data.data);
+				}else{
+					layer.msg(data.msg);
+				}
+			},
+			error:function(){
+				layer.msg("客户端请求有误!");
+			}
+		});
+	}
 
+	
 	function countDown() {
 		var remainSeconds = $("#remainSeconds").val();
 		var timeout;
 		if (remainSeconds > 0) {//秒杀还没开始，倒计时
 			$("#buyButton").attr("disabled", true);
+			$("#miaoshaTip").html("秒杀倒计时：" + remainSeconds + "秒");
 			timeout = setTimeout(function() {
 				$("#countDown").text(remainSeconds - 1);
 				$("#remainSeconds").val(remainSeconds - 1);
